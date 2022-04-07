@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "br.com.rodrigo";
+
+
+package br.com.rodrigo;
+
+service ProductsService {
+  rpc Create (ProductServiceRequest) returns (ProductServiceReply) {}
+}
+
+message ProductServiceRequest {
+  string name = 1;
+  double price = 2;
+  int32 quantity_in_stock = 3;
+}
+
+message ProductServiceReply {
+  int64 id = 1;
+  string name = 2;
+  double price = 3;
+  int32 quantity_in_stock = 4;
+}
