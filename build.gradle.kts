@@ -1,65 +1,75 @@
 import com.google.protobuf.gradle.*
-
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.6.10"
-    id("org.jetbrains.kotlin.kapt") version "1.6.10"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.6.10"
-    id("org.jetbrains.kotlin.plugin.jpa") version "1.6.10"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.micronaut.application") version "3.3.2"
+    id("org.jetbrains.kotlin.jvm") version "1.5.21"
+    id("org.jetbrains.kotlin.kapt") version "1.5.21"
+    id("com.github.johnrengelman.shadow") version "7.1.0"
+    id("io.micronaut.application") version "2.0.8"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.5.21"
+    id("org.jetbrains.kotlin.plugin.jpa") version "1.5.21"
     id("com.google.protobuf") version "0.8.15"
 }
 
 version = "0.1"
-group = "br.com.rodrigo"
+group = "br.com.tony"
 
-val kotlinVersion = project.properties.get("kotlinVersion")
+val kotlinVersion=project.properties.get("kotlinVersion")
 repositories {
     mavenCentral()
 }
 
+micronaut {
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("br.com.tony.*")
+    }
+}
+
 dependencies {
-    kapt("io.micronaut.data:micronaut-data-processor")
-    implementation("io.micronaut:micronaut-jackson-databind")
-    implementation("io.micronaut:micronaut-runtime")
-    implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
-    implementation("io.micronaut.grpc:micronaut-grpc-runtime")
-    implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
-    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
-    implementation("jakarta.annotation:jakarta.annotation-api")
+    kapt("io.micronaut.data:micronaut-data-processor:3.1.1")
+    implementation("io.micronaut:micronaut-runtime:3.1.3")
+    implementation("io.micronaut.data:micronaut-data-hibernate-jpa:3.1.1")
+    implementation("io.micronaut.grpc:micronaut-grpc-runtime:3.0.3")
+    implementation("io.micronaut.kotlin:micronaut-kotlin-runtime:3.0.0")
+    implementation("io.micronaut.sql:micronaut-jdbc-hikari:4.0.4")
+    implementation("javax.annotation:javax.annotation-api:1.3.2")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
-    runtimeOnly("ch.qos.logback:logback-classic")
-    runtimeOnly("com.h2database:h2")
-    implementation("io.micronaut:micronaut-validation")
+    runtimeOnly("ch.qos.logback:logback-classic:1.2.6")
+    runtimeOnly("org.postgresql:postgresql:42.3.1")
+    implementation("io.micronaut:micronaut-validation:3.1.3")
 
-    runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
+    runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
 
-    testImplementation("io.micronaut:micronaut-http-client")
-    testImplementation("org.mockito:mockito-core:4.4.0")
-
-
+    testRuntimeOnly("com.h2database:h2:1.4.200")
+    testImplementation("io.micronaut:micronaut-http-client:3.1.3")
+    testImplementation("org.mockito:mockito-core:4.0.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    testImplementation("io.micronaut.flyway:micronaut-flyway:5.0.0")
 }
 
 
 application {
-    mainClass.set("br.com.rodrigo.ApplicationKt")
+    mainClass.set("br.com.tony.ApplicationKt")
 }
 java {
-    sourceCompatibility = JavaVersion.toVersion("17")
+    sourceCompatibility = JavaVersion.toVersion("11")
 }
 
 tasks {
     compileKotlin {
         kotlinOptions {
-            jvmTarget = "17"
+            jvmTarget = "11"
         }
     }
     compileTestKotlin {
         kotlinOptions {
-            jvmTarget = "17"
+            jvmTarget = "11"
         }
     }
+
+
 }
 sourceSets {
     main {
@@ -76,7 +86,7 @@ protobuf {
     }
     plugins {
         id("grpc") {
-            artifact = "io.grpc:protoc-gen-grpc-java:1.39.0"
+            artifact = "io.grpc:protoc-gen-grpc-java:1.38.0"
         }
     }
     generateProtoTasks {
@@ -88,12 +98,3 @@ protobuf {
         }
     }
 }
-micronaut {
-    testRuntime("junit5")
-    processing {
-        incremental(true)
-        annotations("br.com.rodrigo.*")
-    }
-}
-
-
